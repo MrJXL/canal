@@ -261,8 +261,12 @@ public class CanalRocketMQProducer extends AbstractMQProducer implements CanalMQ
                                     ((RocketMQProducerConfig) this.mqProperties).getTag(),
                                     JSON.toJSONBytes(flatMessage, SerializerFeature.WriteMapNullValue)))
                                 .collect(Collectors.toList());
+                            // 单个发送 rocketmq不支持批量发送
+                            for (Message item : messages) {
+                                sendMessage(item, index);
+                            }
                             // 批量发送
-                            sendMessage(messages, index);
+                            //sendMessage(messages, index);
                         });
                     }
                 }
@@ -276,8 +280,12 @@ public class CanalRocketMQProducer extends AbstractMQProducer implements CanalMQ
                         ((RocketMQProducerConfig) this.mqProperties).getTag(),
                         JSON.toJSONBytes(flatMessage, SerializerFeature.WriteMapNullValue)))
                     .collect(Collectors.toList());
+                // 单个发送 rocketmq不支持批量发送
+                for (Message item : messages) {
+                    sendMessage(item, partition);
+                }
                 // 批量发送
-                sendMessage(messages, partition);
+                //sendMessage(messages, partition);
             }
         }
     }
