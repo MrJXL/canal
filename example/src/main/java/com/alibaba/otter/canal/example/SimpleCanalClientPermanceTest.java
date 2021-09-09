@@ -4,6 +4,7 @@ import java.net.InetSocketAddress;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.otter.canal.client.CanalConnector;
 import com.alibaba.otter.canal.client.CanalConnectors;
 import com.alibaba.otter.canal.client.impl.SimpleCanalConnector;
@@ -12,8 +13,8 @@ import com.alibaba.otter.canal.protocol.Message;
 public class SimpleCanalClientPermanceTest {
 
     public static void main(String args[]) {
-        String destination = "example";
-        String ip = "127.0.0.1";
+        String destination = "zmn_plat";
+        String ip = "192.168.90.81";
         int batchSize = 1024;
         int count = 0;
         int sum = 0;
@@ -43,6 +44,7 @@ public class SimpleCanalClientPermanceTest {
             connector.subscribe();
             while (true) {
                 Message message = connector.getWithoutAck(batchSize, 100L, TimeUnit.MILLISECONDS);
+                System.out.println(JSON.toJSONString(message));
                 long batchId = message.getId();
                 int size = message.getRawEntries().size();
                 sum += size;
